@@ -17,23 +17,31 @@ Plug 'tomtom/tcomment_vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'tpope/vim-endwise'
 Plug 'nixprime/cpsm'
-Plug 'rking/ag.vim'
+Plug 'jremmen/vim-ripgrep'
 Plug 'ervandew/supertab'
-Plug 'bling/vim-airline'
+" Plug 'bling/vim-airline'
+Plug 'itchyny/lightline.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'szw/vim-tags'
 Plug 'tpope/vim-rbenv'
 Plug 'gregsexton/MatchTag'
+Plug 'lambdalisue/gina.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-repeat' " Enables repeat on plugins such as vim-surround
+Plug 'tpope/vim-sleuth'
 Plug 'dkprice/vim-easygrep'
 Plug 'SirVer/ultisnips'
-" Plug 'vim-pandoc/vim-pandoc'
-" Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'janko-m/vim-test'
-Plug 'elmcast/elm-vim'
 Plug 'KabbAmine/zeavim'
+Plug 'tomlion/vim-solidity'
+Plug 'tomlion/vim-solidity'
+Plug 'junegunn/goyo.vim'
+Plug 'docunext/closetag.vim'
+Plug 'elzr/vim-json'
+Plug 'kana/vim-textobj-user'
+Plug 'rhysd/vim-textobj-ruby'
 
 " Neovim extensions
 Plug 'neomake/neomake'
@@ -44,6 +52,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 " Language plugins
+Plug 'IN3D/vim-raml'
 Plug 'kchmck/vim-coffee-script'
 Plug 'fatih/vim-go'
 Plug 'tpope/vim-haml'
@@ -63,6 +72,7 @@ Plug 'elixir-lang/vim-elixir'
 Plug 'dag/vim2hs'
 Plug 'elmcast/elm-vim'
 Plug 'digitaltoad/vim-pug'
+Plug 'pangloss/vim-javascript'
 
 " Themes
 Plug 'squarefrog/tomorrow-night.vim'
@@ -76,6 +86,7 @@ filetype plugin indent on     " required!
 "----------------------------------------------------------------------- Colors
 set background=dark
 colorscheme gruvbox
+let g:gruvbox_contrast_dark='soft'
 
 "------------------------------------------------------------------------- Misc
 set encoding=utf-8 "default character encoding
@@ -114,6 +125,24 @@ map <esc><esc> :noh<CR>
 set wildmenu "turn on wildmenu
 set wildmode=list:longest,full "default to longest match first
 
+"--------------------------------------------------------------------- Lightline
+" let g:lightline = {
+"       \ 'component_function': {
+"       \   'filename': 'LightlineFilename',
+"       \ },
+"       \ }
+"
+" function! LightlineFilename()
+"   return &filetype ==# 'vimfiler' ? vimfiler#get_status_string() :
+"         \ &filetype ==# 'unite' ? unite#get_status_string() :
+"         \ &filetype ==# 'vimshell' ? vimshell#get_status_string() :
+"         \ expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+" endfunction
+"
+" let g:unite_force_overwrite_statusline = 0
+" let g:vimfiler_force_overwrite_statusline = 0
+" let g:vimshell_force_overwrite_statusline = 0
+"
 " ignore directories
 set wildignore=**/node_modules/**
 set wildignore+=*/cookbooks/**
@@ -134,10 +163,11 @@ set formatoptions=qrn1 "I've forgotten what this does, but it helps...somehow
 map <leader>c <c-_><c-_>
 map <leader>no :NERDTreeToggle<CR>
 map <leader>n :NERDTreeFind<CR>
-nmap nw :set nowrap<CR>
 
 "------------------------------------------------------------------------- MultiLine
 let g:multi_cursor_exit_from_insert_mode = 0
+
+let NERDTreeShowHidden=1
 
 " no one is really happy until you have this shortcuts
 cnoreabbrev W! w!
@@ -154,7 +184,9 @@ cnoreabbrev Qall qall
 map <leader>s :w<enter>
 map <leader>q :q<enter>
 map <leader>a :A<enter>
-map <leader>f :Ag<space>
+map <leader>f :Rg<space>
+
+map <leader>tw :set wrap!<CR>
 
 " Map ctrl-movement keys to window switching
 map <C-k> <C-w><Up>
@@ -169,6 +201,9 @@ map <C-S-Tab> :bprevious<cr>
 " Switch to next selected file
 map <leader>cn :cnext<cr>
 map <leader>cp :cprevious<cr>
+
+" Buffers!
+map <leader>b :Buffers<cr>
 
 " Replace native explorer with nerdtree
 let NERDTreeHijackNetrw=1
@@ -240,9 +275,11 @@ autocmd FileType elixir colorscheme atom-dark-256
 " map <leader>t :!mix test<CR>
 
 " --------------------------------------------  neoterm
-let g:neoterm_position = 'vertical'
 let g:neoterm_automap_keys = ',tt'
 let g:neoterm_shell = "zsh"
+let g:neoterm_default_mod = "vertical"
+
+set splitright splitbelow
 
 nnoremap <silent> <f10> :TREPLSendFile<cr>
 nnoremap <silent> <f9> :TREPLSend<cr>
@@ -257,23 +294,27 @@ nnoremap <silent> <leader>rn :TestNearest<cr>
 nnoremap <silent> <leader>rr :TestLast<cr>
 " nnoremap <silent> <leader>rm :Ttest<cr>
 
+" vim.test
+let test#ruby#rspec#options = '-cfd'
 let test#javascript#jest#file_pattern = '\v__tests__/.*[_-]test\.(js|jsx|coffee)$'
+let test#ruby#rspec#executable = 'COV=NO ./bin/rspec'
 
 " fugitive shortcuts
 nnoremap <silent> <leader>gb :Gblame<cr>
 nnoremap <silent> <leader>gs :Gstatus<cr>
 nnoremap <silent> <leader>gc :Gcommit<cr>
 
+" goyo shortcuts
+nnoremap <silent> <leader>gy :Goyo<cr>
+
 :tnoremap <Esc> <C-\><C-n>
 
-" hide/close terminal
-nnoremap <silent> <leader>th :call neoterm#close()<cr>
-" show terminal
-nnoremap <silent> <leader>ts :call neoterm#open()<cr>
+" toggle terminal
+nnoremap <silent> <leader>ts :Ttoggle<cr>
 " clear terminal
-nnoremap <silent> <leader>tl :call neoterm#clear()<cr>
+nnoremap <silent> <leader>tl :Tclear<cr>
 " kills the current job (send a <c-c>)
-nnoremap <silent> <leader>tc :call neoterm#kill()<cr>
+nnoremap <silent> <leader>tc :Tkill<cr>
 
 " Rails commands
 command! Troutes :T rake routes
@@ -294,6 +335,9 @@ let g:neomake_ruby_enabled_makers = ['rubocop', 'reek', 'mri']
 let g:neomake_elixir_enabled_makers = ['credo']
 let g:neomake_css_enabled_makers = ['csslint']
 let g:neomake_javascript_enabled_makers = ['eslint']
+
+let g:neomake_rust_enabled_makers = ['cargo', 'rustc']
+
 autocmd! BufWritePost * Neomake
 
 " ------------------------------------------- Deoplete
@@ -314,6 +358,16 @@ command! NodeCurrentFile :T node %:p
 set mouse=a
 
 let g:elm_format_autosave=1
+
+command! -nargs=0 -bar Qargs execute 'args ' . QuickfixFilenames()
+function! QuickfixFilenames()
+  " Building a hash ensures we get each buffer only once
+  let buffer_numbers = {}
+  for quickfix_item in getqflist()
+    let buffer_numbers[quickfix_item['bufnr']] = bufname(quickfix_item['bufnr'])
+  endfor
+  return join(values(buffer_numbers))
+endfunction
 
 " zeal
 nnoremap <leader>gz :!zeal "<cword>"&<CR><CR>

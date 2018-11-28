@@ -20,6 +20,7 @@ Plug 'nixprime/cpsm'
 Plug 'jremmen/vim-ripgrep'
 Plug 'ervandew/supertab'
 " Plug 'bling/vim-airline'
+Plug 'leafgarland/typescript-vim'
 Plug 'itchyny/lightline.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'szw/vim-tags'
@@ -228,21 +229,35 @@ let g:airline_powerline_fonts = 1
 " ---------------------------------------------------------------------- FZF
 
 nnoremap <C-p> :GitFiles<CR>
-nnoremap <C-t>f :Files<CR>
+nnoremap <leader>F :Files<CR>
+nnoremap <leader>r :registers<CR>
 nnoremap <C-t>F :GitFiles<CR>
 nnoremap <C-t>b :Buffers<CR>
 nnoremap <C-t>L :Lines<CR>
 nnoremap <C-t>l :BLines<CR>
 nnoremap <C-t>T :Tags<CR>
 nnoremap <C-t>t :BTags<CR>
-nnoremap <C-t>m :Marks<CR>
-nnoremap <C-t>w :Windows<CR>
-nnoremap <C-t>h :History<CR>
+nnoremap <leader>m :Marks<CR>
+nnoremap <leader>w :Windows<CR>
+nnoremap <leader>h :History<CR>
 nnoremap <C-t>H :History:<CR>
 nnoremap <C-t>/ :History/<CR>
 
 "----------- Copy and paste in clipboard
 set clipboard+=unnamedplus
+
+"----------- UltiSnips
+"
+"" Snippets are separated from the engine. Add this if you want them:
+Plug 'honza/vim-snippets'
+
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
 
 "-------------------------------------------- Vim Golang
 " Syntax-highlighting for Functions, Methods and Structs
@@ -297,7 +312,9 @@ nnoremap <silent> <leader>rr :TestLast<cr>
 " vim.test
 let test#ruby#rspec#options = '-cfd'
 let test#javascript#jest#file_pattern = '\v__tests__/.*[_-]test\.(js|jsx|coffee)$'
-let test#ruby#rspec#executable = 'COV=NO ./bin/rspec'
+
+let test#ruby#rspec#executable = 'COV=NO rspec --fail-fast'
+" let test#ruby#rspec#executable = 'COV=NO ./bin/rspec'
 
 " fugitive shortcuts
 nnoremap <silent> <leader>gb :Gblame<cr>
@@ -335,7 +352,6 @@ let g:neomake_ruby_enabled_makers = ['rubocop', 'reek', 'mri']
 let g:neomake_elixir_enabled_makers = ['credo']
 let g:neomake_css_enabled_makers = ['csslint']
 let g:neomake_javascript_enabled_makers = ['eslint']
-
 let g:neomake_rust_enabled_makers = ['cargo', 'rustc']
 
 autocmd! BufWritePost * Neomake
@@ -351,6 +367,7 @@ command! ConvertStringQuotes :%s/"\(.\{-}\)"/'\1'/cg | noh
 
 " auto rubocop current file
 command! ConvertCurrentFileRubocop :! rubocop %:p -a
+nnoremap <silent> <leader><leader>s :ConvertCurrentFileRubocop<cr>
 
 " run node for current file
 command! NodeCurrentFile :T node %:p

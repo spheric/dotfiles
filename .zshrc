@@ -1,16 +1,13 @@
-# If you come from bash you might have to change your $PATH.
+#ws If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="miloshadzic"
+ZSH_THEME="spheric"
 
 # Aliases
-alias v="nvim"
+alias v="nvim ."
 alias zshrc="v ~/.zshrc"
 alias ohmyzsh="v ~/.oh-my-zsh"
 alias vimrc="v ~/.vimrc"
@@ -19,6 +16,8 @@ alias work="cd ~/Work"
 alias lists="cd ~/Work/lists"
 alias gsu="git submodule update"
 alias gs="git status"
+alias gsa="git fetch --all --prune --tags"
+alias gpf="~/Work/scripts/force-push-prompt.sh"
 
 alias markdown="cd ~/Dropbox/markdown/files/"
 
@@ -31,9 +30,21 @@ alias start_sidekiq="bundle exec sidekiq -d -c 3 -L ./log/sidekiq.log"
 alias aptu="sudo apt-get update"
 alias apti="sudo apt-get install"
 
+alias weather="curl 'http://wttr.in'"
+
+# Rails
+alias migrate="bx rake db:migrate"
+alias rollback="bx rake db:rollback"
+alias dbconsole="bx rails dbconsole"
+
+# Neovim
+alias n="nvim"
+
 # SCRIPTS
 
 DISABLE_AUTO_UPDATE="false"
+
+export ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[yellow]%}~%{$reset_color%}"
 
 # Uncomment to change how often to auto-update? (in days)
 export UPDATE_ZSH_DAYS=10
@@ -110,7 +121,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #
-/usr/bin/setxkbmap -option "caps:swapescape"
 
 if [ $TERMINIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
@@ -120,6 +130,28 @@ fi
 
 eval $(thefuck --alias)
 
+# keys
+#
 export PATH="$HOME/.rbenv/bin:$PATH"
-
 eval "$(rbenv init -)"
+
+eval "$(direnv hook zsh)"
+
+eval "$(fasd --init posix-alias zsh-hook)"
+
+export NVM_DIR="$HOME/.nvm"
+. "/usr/local/opt/nvm/nvm.sh"
+
+export EDITOR="nvim"
+export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
+export PATH="$PATH:./node_modules/.bin"
+export PATH="/usr/local/opt/qt/bin:$PATH"
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+eval "$(pyenv init -)"
+
+# export JIRA_USERNAME=
+# export JIRA_PASSWORD=
+
+alias ls="exa --long --git"

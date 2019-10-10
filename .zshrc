@@ -4,16 +4,16 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME="spheric"
+# ZSH_THEME="spheric"
+ZSH_THEME="miloshadzic"
 
 # Aliases
-alias v="nvim ."
 alias zshrc="v ~/.zshrc"
 alias ohmyzsh="v ~/.oh-my-zsh"
 alias vimrc="v ~/.vimrc"
 alias comp="docker-compose"
 alias work="cd ~/Work"
-alias lists="cd ~/Work/lists"
+
 alias gsu="git submodule update"
 alias gs="git status"
 alias gsa="git fetch --all --prune --tags"
@@ -39,6 +39,10 @@ alias dbconsole="bx rails dbconsole"
 
 # Neovim
 alias n="nvim"
+
+# Connectajob
+alias connectajob-api="cd /Users/matthewgardner/Connectajob/connectajob-api"
+alias connetajob-web="cd /Users/matthewgardner/Connectajob/connectajob-web-client"
 
 # SCRIPTS
 
@@ -88,7 +92,7 @@ export UPDATE_ZSH_DAYS=10
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git git-extras history jsontools web-search wd bundler)
+plugins=(git git-extras history jsontools web-search wd bundler monolith aws)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -130,8 +134,6 @@ fi
 
 eval $(thefuck --alias)
 
-# keys
-#
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
@@ -139,19 +141,20 @@ eval "$(direnv hook zsh)"
 
 eval "$(fasd --init posix-alias zsh-hook)"
 
-export NVM_DIR="$HOME/.nvm"
-. "/usr/local/opt/nvm/nvm.sh"
-
 export EDITOR="nvim"
-export PATH="$(brew --prefix qt@5.5)/bin:$PATH"
 export PATH="$PATH:./node_modules/.bin"
-export PATH="/usr/local/opt/qt/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+
 eval "$(pyenv init -)"
 
 # export JIRA_USERNAME=
 # export JIRA_PASSWORD=
 
 alias ls="exa --long --git"
+
+alias ave="aws-vault exec"
+
+export NVM_DIR="$HOME/.nvm"
+  . "/usr/local/opt/nvm/nvm.sh"

@@ -32,7 +32,6 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-repeat' " Enables repeat on plugins such as vim-surround
 Plug 'tpope/vim-sleuth'
 Plug 'dkprice/vim-easygrep'
-Plug 'SirVer/ultisnips'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'janko-m/vim-test'
 Plug 'KabbAmine/zeavim'
@@ -43,6 +42,15 @@ Plug 'docunext/closetag.vim'
 Plug 'elzr/vim-json'
 Plug 'kana/vim-textobj-user'
 Plug 'rhysd/vim-textobj-ruby'
+Plug 'djoshea/vim-autoread'
+Plug 'XadillaX/json-formatter.vim'
+Plug 'luochen1990/rainbow'
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'chiel92/vim-autoformat'
+
+let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
 
 " Neovim extensions
 Plug 'neomake/neomake'
@@ -79,15 +87,19 @@ Plug 'pangloss/vim-javascript'
 Plug 'squarefrog/tomorrow-night.vim'
 Plug 'gosukiwi/vim-atom-dark'
 Plug 'morhetz/gruvbox'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
 
 call plug#end()
 
 filetype plugin indent on     " required!
 
+set foldmethod=indent
+set foldlevelstart=20
+
 "----------------------------------------------------------------------- Colors
-set background=dark
-colorscheme gruvbox
-let g:gruvbox_contrast_dark='soft'
+" set background=dar
+colorscheme onehalfdark
+" let g:gruvbox_contrast_dark='soft'
 
 "------------------------------------------------------------------------- Misc
 set encoding=utf-8 "default character encoding
@@ -246,17 +258,20 @@ nnoremap <C-t>/ :History/<CR>
 "----------- Copy and paste in clipboard
 set clipboard+=unnamedplus
 
-"----------- UltiSnips
+" "----------- UltiSnips
+" "
+"  Snippets are separated from the engine. Add this if you want them:
+" Plug 'honza/vim-snippets'
 "
-"" Snippets are separated from the engine. Add this if you want them:
-Plug 'honza/vim-snippets'
-
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
+"
+" " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-" If you want :UltiSnipsEdit to split your window.
+"
+" " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
 "-------------------------------------------- Vim Golang
@@ -311,10 +326,11 @@ nnoremap <silent> <leader>rr :TestLast<cr>
 
 " vim.test
 let test#ruby#rspec#options = '-cfd'
-let test#javascript#jest#file_pattern = '\v__tests__/.*[_-]test\.(js|jsx|coffee)$'
+" let test#javascript#jest#file_pattern = '\v__tests__/.*[_-]test\.(js|jsx|coffee)$'
 
-let test#ruby#rspec#executable = 'COV=NO rspec --fail-fast'
-" let test#ruby#rspec#executable = 'COV=NO ./bin/rspec'
+" let test#ruby#rspec#executable = 'COV=NO rspec --fail-fast'
+let test#ruby#rspec#executable = 'COV=NO bundle exec rspec'
+" let test#ruby#rspec#executable = 'docker exec -it `docker ps -qf ancestor=oculo_web` bin/rspec'
 
 " fugitive shortcuts
 nnoremap <silent> <leader>gb :Gblame<cr>
@@ -365,9 +381,19 @@ command! ConvertHashSyntax :%s/:\([^ ]*\)\(\s*\)=>/\1:/cg | noh
 " convert double to single quotes
 command! ConvertStringQuotes :%s/"\(.\{-}\)"/'\1'/cg | noh
 
-" auto rubocop current file
-command! ConvertCurrentFileRubocop :! rubocop %:p -a
-nnoremap <silent> <leader><leader>s :ConvertCurrentFileRubocop<cr>
+function! AutoFixFile()
+  if &ft ==# 'javascript' || &ft ==# 'typescript'
+    ! eslint %:p --fix
+  endif
+
+  if &ft ==# 'ruby'
+    ! rubocop %:p -a
+  endif
+endfunction
+
+nnoremap <silent> <leader><leader>s :call AutoFixFile()<cr>
+
+nnoremap <silent> <leader>g :Autoformat<cr>
 
 " run node for current file
 command! NodeCurrentFile :T node %:p
